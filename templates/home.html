@@ -1,10 +1,201 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="es">
 <head>
     <meta charset="UTF-8">
-    <title>Title</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NuMaaS - Numerical Methods as a Software</title>
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Custom CSS -->
+    <link href="{{ url_for('static', path='/css/styles.css') }}" rel="stylesheet">
+    <!-- Chart.js para visualización -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary">
+        <div class="container">
+            <a class="navbar-brand" href="/">NuMaaS</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="/">Inicio</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#diode-circuit">Circuito con Diodos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#system-solver">Solver de Sistemas</a>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <div class="col-12">
+                <div class="jumbotron">
+                    <h1 class="display-4">NuMaaS</h1>
+                    <p class="lead">Numerical Methods as a Software - Métodos Numéricos como Software</p>
+                    <hr class="my-4">
+                    <p>
+                        La siguientes secciones proponen calculadoras para métodos numéricos.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Circuito con Diodos -->
+        <div class="row mt-5" id="diode-circuit">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h2>Circuito con Diodos en Paralelo</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form id="diodeCircuitForm">
+                                    <div class="mb-3">
+                                        <label for="vs" class="form-label">Fuente de Voltaje (Vs)</label>
+                                        <input type="number" class="form-control" id="vs" name="vs" required step="0.1" value="5.0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="r" class="form-label">Resistencia (R)</label>
+                                        <input type="number" class="form-control" id="r" name="r" required step="1" value="1000">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="is1" class="form-label">Corriente de saturación diodo 1 (Is1)</label>
+                                        <input type="number" class="form-control" id="is1" name="is1" required step="1e-13" value="2e-12">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="is2" class="form-label">Corriente de saturación diodo 2 (Is2)</label>
+                                        <input type="number" class="form-control" id="is2" name="is2" required step="1e-13" value="5e-12">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="vt" class="form-label">Voltaje térmico (Vt)</label>
+                                        <input type="number" class="form-control" id="vt" name="vt" required step="0.001" value="0.02585">
+                                    </div>
+                                    <h5 class="mt-4">Valores iniciales</h5>
+                                    <div class="mb-3">
+                                        <label for="i1_0" class="form-label">Corriente diodo 1 inicial (I1)</label>
+                                        <input type="number" class="form-control" id="i1_0" name="i1_0" required step="0.001" value="0.021">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="i2_0" class="form-label">Corriente diodo 2 inicial (I2)</label>
+                                        <input type="number" class="form-control" id="i2_0" name="i2_0" required step="0.001" value="0.003">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="vd_0" class="form-label">Voltaje diodo inicial (Vd)</label>
+                                        <input type="number" class="form-control" id="vd_0" name="vd_0" required step="0.1" value="0.7">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tolerance" class="form-label">Tolerancia</label>
+                                        <input type="number" class="form-control" id="tolerance" name="tolerance" required step="1e-7" value="1e-6">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="iter_max" class="form-label">Iteraciones máximas</label>
+                                        <input type="number" class="form-control" id="iter_max" name="iter_max" required step="1" value="100">
+                                    </div>
+                                    <div class="mb-3 form-check">
+                                        <input type="checkbox" class="form-check-input" id="historial" name="historial" checked>
+                                        <label class="form-check-label" for="historial">Guardar historial de iteraciones</label>
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Calcular</button>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="diodeCircuitResults" class="d-none">
+                                    <h4>Resultados:</h4>
+                                    <div class="alert alert-success">
+                                        <h5>Solución encontrada:</h5>
+                                        <p><strong>Corriente diodo 1 (I1):</strong> <span id="result-i1"></span> A</p>
+                                        <p><strong>Corriente diodo 2 (I2):</strong> <span id="result-i2"></span> A</p>
+                                        <p><strong>Voltaje diodo (Vd):</strong> <span id="result-vd"></span> V</p>
+                                        <p><strong>Iteraciones:</strong> <span id="result-iterations"></span></p>
+                                        <p><strong>Convergencia:</strong> <span id="result-converged"></span></p>
+                                    </div>
+                                    <div id="convergenceChartContainer" class="mt-3">
+                                        <canvas id="convergenceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Sistema de Ecuaciones Generales -->
+        <div class="row mt-5" id="system-solver">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header bg-secondary text-white">
+                        <h2>Solver de Sistemas de Ecuaciones</h2>
+                    </div>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-md-6">
+                                <form id="systemSolverForm">
+                                    <div class="mb-3">
+                                        <label for="variables" class="form-label">Variables (separadas por coma)</label>
+                                        <input type="text" class="form-control" id="variables" name="variables" required placeholder="x, y, z">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="ecuaciones" class="form-label">Ecuaciones (una por línea)</label>
+                                        <textarea class="form-control" id="ecuaciones" name="ecuaciones" rows="5" required placeholder="x**2 + y**2 - 4&#10;x - y"></textarea>
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="valores_iniciales" class="form-label">Valores iniciales (separados por coma)</label>
+                                        <input type="text" class="form-control" id="valores_iniciales" name="valores_iniciales" required placeholder="1.0, 1.0">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="tolerancia" class="form-label">Tolerancia</label>
+                                        <input type="number" class="form-control" id="tolerancia" name="tolerancia" required step="1e-7" value="1e-6">
+                                    </div>
+                                    <div class="mb-3">
+                                        <label for="max_iteraciones" class="form-label">Iteraciones máximas</label>
+                                        <input type="number" class="form-control" id="max_iteraciones" name="max_iteraciones" required step="1" value="100">
+                                    </div>
+                                    <button type="submit" class="btn btn-primary">Resolver</button>
+                                </form>
+                            </div>
+                            <div class="col-md-6">
+                                <div id="systemSolverResults" class="d-none">
+                                    <h4>Resultados:</h4>
+                                    <div class="alert alert-success">
+                                        <h5>Solución encontrada:</h5>
+                                        <div id="result-solucion"></div>
+                                        <p><strong>Iteraciones:</strong> <span id="result-system-iterations"></span></p>
+                                        <p><strong>Convergencia:</strong> <span id="result-system-converged"></span></p>
+                                    </div>
+                                    <div id="systemConvergenceChartContainer" class="mt-3">
+                                        <canvas id="systemConvergenceChart"></canvas>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white mt-5 py-3">
+        <div class="container text-center">
+            <p>NuMaaS - Numerical Methods as a Software Thinking by sigmotoa for UD</p>
+            <a href="sigmotoaa.com">sigmotoa</a>
+        </div>
+    </footer>
+
+    <!-- Bootstrap JS Bundle -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Axios para peticiones HTTP -->
+    <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
+    <!-- Custom JavaScript -->
+    <script src="{{ url_for('static', path='/js/app.js') }}"></script>
 
 </body>
 </html>
