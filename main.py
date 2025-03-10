@@ -22,7 +22,7 @@ app.mount("/static",StaticFiles(directory="static"),name="static")
 @app.get("/", response_class=HTMLResponse)
 async def home(request:Request):
     return templates.TemplateResponse(
-        "home.html",{"request":request,"title":"NuMaaS - Numerical Methods as a Software"}
+        request=request,name= "home.html"
     )
 
 @app.get("/hello/{name}")
