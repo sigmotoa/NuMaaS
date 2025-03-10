@@ -4,7 +4,7 @@ from typing import Callable, Tuple, List, Dict, Any, Optional, Union
 
 class NewtonRaphson:
     """
-    Implementación del método Newton-Raphson para sistemas de ecuaciones no lineales.
+    Implementación del metodo Newton-Raphson para sistemas de ecuaciones no lineales.
 
     Atributos:
         system (Callable): Función que define el sistema de ecuaciones F(x) = 0.
@@ -12,7 +12,7 @@ class NewtonRaphson:
         tolerance (float): Tolerancia para la convergencia.
         max_iterations (int): Número máximo de iteraciones permitidas.
         iterations (int): Número de iteraciones realizadas.
-        converged (bool): Indica si el método ha convergido.
+        converged (bool): Indica si el metodo ha convergido.
         history (List): Historial de iteraciones para análisis.
     """
 
@@ -48,7 +48,7 @@ class NewtonRaphson:
             store_history: bool = False
     ) -> np.ndarray:
         """
-        Resuelve el sistema de ecuaciones utilizando el método Newton-Raphson.
+        Resuelve el sistema de ecuaciones utilizando el metodo Newton-Raphson.
 
         Args:
             initial_guess: Vector de valores iniciales.
