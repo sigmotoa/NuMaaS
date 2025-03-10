@@ -54,8 +54,10 @@ async function handleDiodeCircuitSubmit(event) {
         // Display convergence chart if history data is available
         if (data.historial && data.historial.length > 0) {
             createConvergenceChart(data.historial);
+        } else {
+            // Si no hay historial, asegúrate de que la tabla esté oculta
+            document.getElementById('iterationTableContainer').classList.add('d-none');
         }
-
 
     } catch (error) {
         alert('Error: ' + error.message);
@@ -163,7 +165,6 @@ function createConvergenceChart(historyData) {
         }
     });
 
-
     // Create distance chart if we have distance data
     if (distanceData.length > 0) {
         // Create a second chart for distance
@@ -195,57 +196,54 @@ function createConvergenceChart(historyData) {
                 }
             }
         });
+    }
 
-        // Display iteration history in table
-if (data.historial && data.historial.length > 0) {
-    // First create the convergence chart (existing code)
-    createConvergenceChart(data.historial);
+    // Display iteration history in table
+    if (historyData && historyData.length > 0) {
+        // Populate the table
+        const tableBody = document.getElementById('iterationTableBody');
+        tableBody.innerHTML = ''; // Clear any existing rows
 
-    // Then populate the table
-    const tableBody = document.getElementById('iterationTableBody');
-    tableBody.innerHTML = ''; // Clear any existing rows
+        historyData.forEach(item => {
+            const row = document.createElement('tr');
 
-    data.historial.forEach(item => {
-        const row = document.createElement('tr');
+            // Create cells for each data point
+            const iterCell = document.createElement('td');
+            iterCell.textContent = item.iteracion;
 
-        // Create cells for each data point
-        const iterCell = document.createElement('td');
-        iterCell.textContent = item.iteracion;
+            const i1Cell = document.createElement('td');
+            i1Cell.textContent = item.i1.toExponential(6);
 
-        const i1Cell = document.createElement('td');
-        i1Cell.textContent = item.i1.toExponential(6);
+            const i2Cell = document.createElement('td');
+            i2Cell.textContent = item.i2.toExponential(6);
 
-        const i2Cell = document.createElement('td');
-        i2Cell.textContent = item.i2.toExponential(6);
+            const vdCell = document.createElement('td');
+            vdCell.textContent = item.vd.toFixed(6);
 
-        const vdCell = document.createElement('td');
-        vdCell.textContent = item.vd.toFixed(6);
+            // Distance might not be available for iteration 0
+            const distCell = document.createElement('td');
+            if ('distancia' in item) {
+                distCell.textContent = item.distancia.toExponential(6);
+            } else {
+                distCell.textContent = '—';
+            }
 
-        // Distance might not be available for iteration 0
-        const distCell = document.createElement('td');
-        if ('distancia' in item) {
-            distCell.textContent = item.distancia.toExponential(6);
-        } else {
-            distCell.textContent = '—';
-        }
+            // Add all cells to the row
+            row.appendChild(iterCell);
+            row.appendChild(i1Cell);
+            row.appendChild(i2Cell);
+            row.appendChild(vdCell);
+            row.appendChild(distCell);
 
-        // Add all cells to the row
-        row.appendChild(iterCell);
-        row.appendChild(i1Cell);
-        row.appendChild(i2Cell);
-        row.appendChild(vdCell);
-        row.appendChild(distCell);
+            // Add the row to the table
+            tableBody.appendChild(row);
+        });
 
-        // Add the row to the table
-        tableBody.appendChild(row);
-    });
-
-    // Show the table container
-    document.getElementById('iterationTableContainer').classList.remove('d-none');
-} else {
-    // Hide the table container if no history data
-    document.getElementById('iterationTableContainer').classList.add('d-none');
-}
+        // Show the table container
+        document.getElementById('iterationTableContainer').classList.remove('d-none');
+    } else {
+        // Hide the table container if no history data
+        document.getElementById('iterationTableContainer').classList.add('d-none');
     }
 }
 
