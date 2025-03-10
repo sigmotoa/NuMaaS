@@ -76,7 +76,7 @@ async def calculate_diode_circuit(
         # Extraer resultados
         i1, i2, vd = result
 
-        # Preparar historial si se solicitó
+
         historial_data = None
         if input_data.historial and isinstance(solve_diode_circuit.__globals__['NewtonRaphson'], type):
             solver = solve_diode_circuit.__globals__.get('solver', None)
@@ -91,7 +91,7 @@ async def calculate_diode_circuit(
                         "distancia": float(item.get('distance', 0))
                     })
 
-        # Crear objeto de respuesta
+
         output_data = OutputModelCircuitDiode(
             i1=float(i1),
             i2=float(i2),

@@ -40,7 +40,8 @@ async function handleDiodeCircuitSubmit(event) {
         }
 
         const data = await response.json();
-
+console.log("Response data:", data);
+console.log("History data:", data.historial);
         // Display results
         document.getElementById('result-i1').textContent = data.i1.toExponential(6);
         document.getElementById('result-i2').textContent = data.i2.toExponential(6);
@@ -201,6 +202,7 @@ function createConvergenceChart(historyData) {
     // Display iteration history in table
     if (historyData && historyData.length > 0) {
         // Populate the table
+        console.log("Table should be displayed, history data:", historyData);
         const tableBody = document.getElementById('iterationTableBody');
         tableBody.innerHTML = ''; // Clear any existing rows
 
