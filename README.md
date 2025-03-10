@@ -11,7 +11,7 @@ Perfecta para aplicaciones de ingeniería eléctrica, mecánica, física y más.
 
 ## 🚀 Características (Por ahora)
 
-- 🧮 Implementación optimizada del método Newton-Raphson multivariado
+- 🧮 Implementación del método Newton-Raphson multivariado
 - 🔌 Resolución de circuitos con diodos en paralelo
 - 📊 Visualización de las iteraciones y convergencia
 - 📝 Documentación completa con Swagger UI
@@ -62,7 +62,7 @@ Las contribuciones son bienvenidas. Por favor, siente libre de abrir un issue o 
 
 ## 📜 Licencia (Pendiente)
 
-Este proyecto está licenciado bajo la licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
+Este proyecto (pueda ser que) está licenciado bajo la licencia MIT - ver el archivo [LICENSE](LICENSE) para más detalles.
 
 ## 📚 Para más información
 
