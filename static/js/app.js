@@ -1,6 +1,6 @@
-// Wait for DOM to be fully loaded
+
 document.addEventListener('DOMContentLoaded', function() {
-    // Get form elements
+
     const diodeCircuitForm = document.getElementById('diodeCircuitForm');
     const systemSolverForm = document.getElementById('systemSolverForm');
 
@@ -55,6 +55,7 @@ async function handleDiodeCircuitSubmit(event) {
         if (data.historial && data.historial.length > 0) {
             createConvergenceChart(data.historial);
         }
+
 
     } catch (error) {
         alert('Error: ' + error.message);
@@ -162,6 +163,7 @@ function createConvergenceChart(historyData) {
         }
     });
 
+
     // Create distance chart if we have distance data
     if (distanceData.length > 0) {
         // Create a second chart for distance
@@ -193,6 +195,57 @@ function createConvergenceChart(historyData) {
                 }
             }
         });
+
+        // Display iteration history in table
+if (data.historial && data.historial.length > 0) {
+    // First create the convergence chart (existing code)
+    createConvergenceChart(data.historial);
+
+    // Then populate the table
+    const tableBody = document.getElementById('iterationTableBody');
+    tableBody.innerHTML = ''; // Clear any existing rows
+
+    data.historial.forEach(item => {
+        const row = document.createElement('tr');
+
+        // Create cells for each data point
+        const iterCell = document.createElement('td');
+        iterCell.textContent = item.iteracion;
+
+        const i1Cell = document.createElement('td');
+        i1Cell.textContent = item.i1.toExponential(6);
+
+        const i2Cell = document.createElement('td');
+        i2Cell.textContent = item.i2.toExponential(6);
+
+        const vdCell = document.createElement('td');
+        vdCell.textContent = item.vd.toFixed(6);
+
+        // Distance might not be available for iteration 0
+        const distCell = document.createElement('td');
+        if ('distancia' in item) {
+            distCell.textContent = item.distancia.toExponential(6);
+        } else {
+            distCell.textContent = '—';
+        }
+
+        // Add all cells to the row
+        row.appendChild(iterCell);
+        row.appendChild(i1Cell);
+        row.appendChild(i2Cell);
+        row.appendChild(vdCell);
+        row.appendChild(distCell);
+
+        // Add the row to the table
+        tableBody.appendChild(row);
+    });
+
+    // Show the table container
+    document.getElementById('iterationTableContainer').classList.remove('d-none');
+} else {
+    // Hide the table container if no history data
+    document.getElementById('iterationTableContainer').classList.add('d-none');
+}
     }
 }
 
